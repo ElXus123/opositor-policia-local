@@ -5,6 +5,7 @@
 <meta name="theme-color" content="#1c3f94">
 <meta name="description" content="Prepara la oposición a Policía Local de Aragón: plan diario, temario, tests, físicas y psicotécnicos.">
 <link rel="manifest" href="manifest.webmanifest">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1159,11 +1160,11 @@ if(!S.exam){S.exam=dstr(new Date(Date.now()+180*DAY));S.exampleDate=true}
 /* ================= CONEXIÓN CON CLAUDE ================= */
 let DB=null,SAMPLE=null,TTS=null,syncState="local",pushing=false,pendingPush=false,saveTimer=null;
 let PROFE={items:[]},NOV=NOV_DEFAULT,PROFE_Q=[],RES={items:[]},PET=null,anBusy=false,anCtl=null;
-function save(){S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(DB){clearTimeout(saveTimer);saveTimer=setTimeout(pushDB,3000)}}
+function save(){S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(DB){clearTimeout(saveTimer);saveTimer=setTimeout(pushDB,3000)}if(typeof SBU!=="undefined"&&SBU)cloudSchedule()}
 async function pushDB(){if(!DB)return;if(pushing){pendingPush=true;return}pushing=true;
  try{await DB.doc("progreso/estado").set({ts:S.ts,actualizado:new Date().toISOString(),resumen:resumen(),estado:S});syncState="ok"}catch(e){syncState=e&&e.code==="quota_exceeded"?"lleno":"error"}
  pushing=false;paintSync();if(pendingPush){pendingPush=false;pushDB()}}
-function paintSync(){const el=$("#sync");if(!el)return;const m={local:["Solo en este dispositivo",""],ok:["Conectado con tu profe","ok"],error:["Sin conexión con el profe","warn"],lleno:["Almacenamiento lleno","ko"],cargando:["Conectando…","acc"]}[syncState]||["",""];el.textContent=m[0];el.className="pill "+m[1]}
+function paintSync(){const el=$("#sync");if(!el)return;const m={local:[STANDALONE?"Sin cuenta":"Solo en este dispositivo",""],ok:["Conectado con tu profe","ok"],error:["Sin conexión con el profe","warn"],lleno:["Almacenamiento lleno","ko"],cargando:["Conectando…","acc"]}[syncState]||["",""];el.textContent=m[0];el.className="pill "+m[1]}
 async function initClaude(){
  if(!window.claude||!window.claude.use)return;
  syncState="cargando";paintSync();
@@ -1254,8 +1255,8 @@ function readiness(){const cov=OFICIALES.reduce((a,t)=>a+(S.temas[t.id]||0),0)/(
  return{v:Math.round(parts.reduce((a,p)=>a+p[1]*p[2],0)*100),parts}}
 
 /* ================= NAVEGACIÓN ================= */
-const VIEWS=["guia","movil","entreno","hoy","ruta","temario","practicar","profe","mas","tests","tarjetas","psico","supuestos","fisicas","convocatoria","plan","logros"];
-const PARENT={entreno:"practicar",movil:"mas",tests:"practicar",tarjetas:"practicar",psico:"practicar",supuestos:"practicar",fisicas:"practicar",convocatoria:"mas",plan:"mas",logros:"mas"};
+const VIEWS=["guia","cuenta","movil","entreno","hoy","ruta","temario","practicar","profe","mas","tests","tarjetas","psico","supuestos","fisicas","convocatoria","plan","logros"];
+const PARENT={cuenta:"mas",entreno:"practicar",movil:"mas",tests:"practicar",tarjetas:"practicar",psico:"practicar",supuestos:"practicar",fisicas:"practicar",convocatoria:"mas",plan:"mas",logros:"mas"};
 const PNAME={practicar:"Practicar",mas:"Más"};
 let view="hoy",openTema=null;
 function go(v){if(v==="inicio")v="hoy";if(!VIEWS.includes(v))v="hoy";view=v;try{if(location.hash!=="#"+v)history.replaceState(null,"","#"+v)}catch(e){}render();window.scrollTo(0,0)}
@@ -1269,7 +1270,7 @@ function render(){
  const nNew=(NOV.items||[]).filter(i=>i.fecha>(S.seenNov||"")).length+(PROFE.items||[]).filter(i=>(i.fecha||"")>(S.seenProfe||"")).length+(RES.items||[]).filter(i=>(i.fecha||"")>(S.seenRes||"")).length;
  const pb=$("#tabs button[data-v='profe'] .dot");if(pb)pb.hidden=!nNew;
  if(view==="profe")bump("profe");
- const f={guia:vGuia,movil:vMovil,entreno:vEntreno,hoy:vHoy,ruta:vRuta,temario:vTemario,practicar:vPracticar,profe:vProfe,mas:vMas,tests:vTests,tarjetas:vRepaso,psico:vPsico,supuestos:vCasos,fisicas:vFis,convocatoria:vConv,plan:vPlan,logros:vLogros}[view];
+ const f={guia:vGuia,cuenta:vCuenta,movil:vMovil,entreno:vEntreno,hoy:vHoy,ruta:vRuta,temario:vTemario,practicar:vPracticar,profe:vProfe,mas:vMas,tests:vTests,tarjetas:vRepaso,psico:vPsico,supuestos:vCasos,fisicas:vFis,convocatoria:vConv,plan:vPlan,logros:vLogros}[view];
  const back=PARENT[view]&&!(view==="tests"&&T)&&!(view==="psico"&&P)?`<div><button class="btn sm ghost" data-go="${PARENT[view]}">← ${PNAME[PARENT[view]]}</button></div>`:"";
  $("#app").innerHTML=back+f();paintSync();
  if(after[view])after[view]();
@@ -1480,6 +1481,7 @@ function vHoy(){
   <label class="f">2. ¿Por qué quieres ser policía? Te lo recordaré cuando te cueste.<input type="text" id="onbMot" value="${esc(S.motivo)}" placeholder="Ej.: Quiero un trabajo estable sirviendo a mi pueblo"></label>
   <label class="f">3. ¿Qué premio te darás al llegar al nivel 5?<input type="text" id="onbPre" value="${esc(S.premio)}" placeholder="Ej.: Unas zapatillas nuevas"></label>
   <div class="row"><button class="btn gold" data-act="onbok">Listo, ver mi plan de hoy</button></div></section>`:""}
+ ${STANDALONE&&SB&&!SBU?`<div class="nextb"><span class="small">Conecta tu cuenta</span><b>Crea tu cuenta gratis para que tu profe vea tu progreso y te deje informes aquí.</b><button class="btn pri" data-go="cuenta">Conectar</button></div>`:""}
  ${convCard()}
  <section class="today">
   <div class="today-h">
@@ -1537,7 +1539,7 @@ function vPracticar(){const wrong=QS.filter(q=>S.qs[q.id]&&S.qs[q.id].last===0).
 /* ================= MÁS ================= */
 function vMas(){const C=(go,t,d)=>`<button class="hub" data-go="${go}"><b>${t}</b><span class="small muted">${d}</span></button>`;
  return `<section class="panel flat stack"><div class="eyebrow">Más</div><h2>Convocatorias, resultados y ajustes</h2></section>
- <section class="hubs">${C("guia","Guía de la app","Cómo funciona todo y por dónde empezar, en 6 pasos.")}${C("convocatoria","Convocatorias y resultados","Próximas convocatorias, plazas, requisitos y cómo has salido en las listas.")}${C("movil","Ponla en tu móvil","Cómo tener la app con su icono en el móvil, sincronizada con el ordenador.")}${C("plan","Calendario de estudio","Tu plan semana a semana hasta la fecha del examen.")}${C("logros","Logros y progreso","Nivel, racha, insignias, actividad y copia de seguridad.")}</section>
+ <section class="hubs">${STANDALONE?C("cuenta",typeof SBU!=="undefined"&&SBU?"Mi cuenta":"Conecta tu cuenta",typeof SBU!=="undefined"&&SBU?"Conectado con tu profe. Tu progreso se guarda en tu cuenta.":"Crea tu cuenta gratis para que tu profe vea tu progreso y te deje informes aquí."):""}${C("guia","Guía de la app","Cómo funciona todo y por dónde empezar, en 6 pasos.")}${C("convocatoria","Convocatorias y resultados","Próximas convocatorias, plazas, requisitos y cómo has salido en las listas.")}${C("movil","Ponla en tu móvil","Cómo tener la app con su icono en el móvil, sincronizada con el ordenador.")}${C("plan","Calendario de estudio","Tu plan semana a semana hasta la fecha del examen.")}${C("logros","Logros y progreso","Nivel, racha, insignias, actividad y copia de seguridad.")}</section>
  <section class="panel stack"><div class="eyebrow">Ajustes</div>
   <div class="row"><label class="f">Ritmo diario<select id="goalSel">${Object.entries(GOALS).map(([k,g])=>`<option value="${k}" ${S.goal===k?"selected":""}>${g.n} · ${g.d}</option>`).join("")}</select></label>
   <label class="f">Fecha prevista del examen<input type="date" id="examDate" value="${esc(S.exam)}"></label>
@@ -1871,10 +1873,10 @@ async function analizarTodo(){if(!SAMPLE){toast("El análisis necesita la app ab
   S.informes=[{fecha:today(),titulo:"Análisis de tus resultados",texto:text}].concat(S.informes||[]).slice(0,10);addXP(10);toast("Análisis guardado en tus informes")}
  catch(e){const o=$("#anTodo");if(o&&!(e&&e.text))o.innerHTML=`<div class="expl">${esc(e&&e.code==="cancelled"?"Análisis detenido.":sampleErr(e))}</div>`}
  anBusy=false;save();if(view==="profe")render()}
-async function pedirRevision(){if(!DB){toast("Para pedirme la revisión, abre la app en Claude con tu cuenta");return}
+async function pedirRevision(){if(!DB&&STANDALONE){cloudPeticion(($("#petNota")||{}).value);return}if(!DB){toast("Para pedirme la revisión, abre la app en Claude con tu cuenta");return}
  const nota=($("#petNota")||{}).value||"";const doc={estado:"pendiente",pedida:new Date().toISOString(),nota:String(nota).slice(0,500)};
  try{await DB.doc("peticiones/revision").set(doc);PET=doc;addXP(5);toast("Petición enviada. La reviso en la siguiente pasada");render()}catch(e){toast("No se ha podido enviar. Inténtalo otra vez")}}
-function panelAnalisis(){if(!SAMPLE&&STANDALONE)return `<section class="panel stack resbox"><div class="eyebrow">Analiza mis resultados</div><h2>¿Cómo voy?</h2><p class="small">El análisis de tus resultados, la revisión completa y la búsqueda de tu nombre en las listas los hago en la versión de la app que está dentro de Claude. Pásale allí tu progreso y pídemelo.</p><div class="row"><a class="btn gold" href="${CLAUDE_URL}" target="_blank" rel="noopener">Abrir la versión de Claude</a><button class="btn" data-go="movil">Cómo pasar mi progreso</button></div></section>`;const last=(S.informes||[])[0];const pend=PET&&PET.estado==="pendiente";const hecha=PET&&PET.estado==="hecha";
+function panelAnalisis(){if(!SAMPLE&&STANDALONE&&typeof SBU!=="undefined"&&SBU){const pend=PET&&PET.estado==="pendiente";return `<section class="panel stack resbox"><div class="eyebrow">Analiza mis resultados</div><h2>¿Cómo voy?</h2><p class="small">Pídeme una revisión completa: analizo tu progreso, busco tu nombre en las listas oficiales, miro convocatorias y te dejo el informe aquí. La hago en la siguiente pasada (cada día a las 8:00 y a las 20:00). Para un análisis al momento y el chat, usa la versión de Claude.</p><input type="text" id="petNota" placeholder="Opcional: algo concreto que quieras que mire"><div class="row"><button class="btn gold" data-act="pedirrev" ${pend?"disabled":""}>${pend?"Revisión pedida":"Pídeme una revisión completa"}</button><a class="btn" href="${CLAUDE_URL}" target="_blank" rel="noopener">Abrir la versión de Claude</a></div></section>`}if(!SAMPLE&&STANDALONE)return `<section class="panel stack resbox"><div class="eyebrow">Analiza mis resultados</div><h2>¿Cómo voy?</h2><p class="small">El análisis de tus resultados, la revisión completa y la búsqueda de tu nombre en las listas los hago en la versión de la app que está dentro de Claude. Pásale allí tu progreso y pídemelo.</p><div class="row"><a class="btn gold" href="${CLAUDE_URL}" target="_blank" rel="noopener">Abrir la versión de Claude</a><button class="btn" data-go="movil">Cómo pasar mi progreso</button></div></section>`;const last=(S.informes||[])[0];const pend=PET&&PET.estado==="pendiente";const hecha=PET&&PET.estado==="hecha";
  return `<section class="panel stack resbox"><div class="eyebrow">Analiza mis resultados</div><h2>¿Cómo voy?</h2>
   <div class="grid2"><div class="stack"><b>Análisis al momento</b><p class="small muted">Reviso tus tests, temas, fallos, físicas, psicotécnicos y supuestos, y te digo cómo vas, si aprobarías hoy y qué hacer los próximos 7 días. Tarda menos de un minuto.</p>
    <div class="row"><button class="btn gold" data-act="analizar" ${anBusy?"disabled":""}>${anBusy?"Analizando…":"Analiza mis resultados"}</button>${anBusy?`<button class="btn" data-act="anstop">Parar</button>`:""}</div></div>
@@ -1884,7 +1886,7 @@ function panelAnalisis(){if(!SAMPLE&&STANDALONE)return `<section class="panel st
   <div id="anTodo">${last&&!anBusy?`<details class="case"><summary><b>Tu último análisis</b><span class="small muted">${esc(last.fecha)}</span></summary><div class="in"><div class="prose small">${fmtMsg(last.texto)}</div></div></details>`:""}</div></section>`}
 
 
-function vMovil(){if(STANDALONE)return `<section class="panel stack"><div class="eyebrow">App instalada</div><h2>Esta es tu app del móvil</h2><p>Funciona sin internet y guarda tu progreso en este móvil. Para hablar con tu profe, pedirme un análisis o la revisión de las listas, usa la versión que está dentro de Claude.</p>
+function vMovil(){if(STANDALONE)return `<section class="panel stack"><div class="eyebrow">App instalada</div><h2>Esta es tu app del móvil</h2><p>Funciona sin internet. Si entras con tu cuenta (Más → Conecta tu cuenta), tu progreso se guarda en la nube, yo lo reviso, te dejo los informes aquí y lo copio a la versión de Claude dos veces al día. Para el chat con el profe y el análisis al momento, usa la versión de Claude.</p>
  <h3>Pasar tu progreso de aquí a la versión de Claude (o al revés)</h3><ol class="clean"><li>Aquí: <b>Más → Logros y progreso → Copiar progreso</b>.</li><li>Pégalo en un mensaje para ti (WhatsApp, notas…) si cambias de dispositivo.</li><li>Allí: <b>Más → Logros y progreso → Importar</b>, pega el texto y pulsa <b>Importar</b>.</li></ol><p class="note small">Al importar se sustituye el progreso de ese lugar por el que pegas. Hazlo siempre desde el que tenga el progreso más reciente.</p>
  <div class="row"><a class="btn pri" href="${CLAUDE_URL}" target="_blank" rel="noopener">Abrir la versión de Claude</a><button class="btn" data-go="logros">Ir a copiar mi progreso</button></div></section>`;return `<section class="panel stack"><div class="eyebrow">En tu móvil</div><h2>Ponla en tu móvil como una app</h2>
  <p>No hace falta instalar nada: la app vive en tu cuenta de Claude. Si la abres desde el móvil, tu progreso es el mismo que en el ordenador, y yo puedo seguir corrigiéndote y avisándote.</p>
@@ -1920,6 +1922,59 @@ function pinPanel(){const has=!!pinGet();return `<section class="panel stack"><d
  <p class="small muted">${has?"Se pide al abrir la app y si la dejas en segundo plano más de 3 minutos.":"Así, aunque alguien coja tu móvil, no podrá entrar ni cambiar tu progreso."} El PIN se guarda cifrado solo en este dispositivo.${STANDALONE?"":" En cada dispositivo donde abras la app puedes poner el suyo."}</p>
  <div class="row">${has?`<label class="f">PIN actual<input type="password" id="pin0" inputmode="numeric" maxlength="8" autocomplete="current-password"></label>`:""}<label class="f">${has?"Nuevo PIN":"PIN (4-8 números)"}<input type="password" id="pin1" inputmode="numeric" maxlength="8" autocomplete="new-password"></label><label class="f">Repítelo<input type="password" id="pin2" inputmode="numeric" maxlength="8" autocomplete="new-password"></label></div>
  <div class="row"><button class="btn pri" data-act="pinset">${has?"Cambiar PIN":"Activar PIN"}</button>${has?`<button class="btn" data-act="pinoff">Quitar PIN</button><button class="btn" data-act="pinlock">Bloquear ahora</button>`:""}</div></section>`}
+
+
+/* ================= CUENTA Y NUBE (solo en la app web) ================= */
+const SB_URL="https://alfuunxfiqyxqxbmetsj.supabase.co",SB_KEY="sb_publishable_W6_D6nndmEMraaTIx-4yjw_WjGcXP2Y";
+let SB=null,SBU=null,sbTimer=null,sbPushing=false,sbPend=false,sbMsg="";
+function aplicarDatos(d){if(!d||typeof d!=="object")return;try{
+ if(d.novedades&&Array.isArray(d.novedades.items))NOV=d.novedades;
+ if(Array.isArray(d.convocatorias))CONV_DB=d.convocatorias;
+ if(d.temario&&typeof d.temario==="object")applyTemario(d.temario);
+ if(Array.isArray(d.preguntas)){PROFE_Q=d.preguntas;buildQS()}
+ if(Array.isArray(d.profe))PROFE={items:d.profe};
+}catch(e){}}
+async function cloudInit(){if(!STANDALONE||!window.supabase||!window.supabase.createClient)return;
+ try{SB=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(e){SB=null;return}
+ SB.auth.onAuthStateChange((ev,ses)=>{const was=!!SBU;SBU=ses?ses.user:null;if(SBU&&!was)cloudPull();if(!SBU){syncState="local";render()}});
+ try{const{data}=await SB.auth.getSession();SBU=data&&data.session?data.session.user:null}catch(e){}
+ if(SBU)cloudPull();else cloudContenido();
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden&&SBU)cloudPull()})}
+async function cloudContenido(){if(!SB)return;try{const{data}=await SB.from("contenido").select("data").eq("id","datos").maybeSingle();if(data&&data.data){aplicarDatos(data.data);render()}}catch(e){}}
+async function cloudPull(){if(!SB||!SBU)return;syncState="cargando";paintSync();
+ try{await cloudContenido();
+  const{data:docs}=await SB.from("profe_docs").select("doc,data");(docs||[]).forEach(r=>{if(r.doc==="mensajes"&&r.data&&Array.isArray(r.data.items))PROFE=r.data;if(r.doc==="resultados"&&r.data&&Array.isArray(r.data.items))RES=r.data;if(r.doc==="peticion")PET=r.data});
+  const{data:row,error}=await SB.from("progreso").select("ts,estado").maybeSingle();if(error)throw error;
+  if(row&&row.estado&&(row.ts||0)>(S.ts||0)){const keepGuia=S.guia;Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,def(),row.estado);if(keepGuia)S.guia=true;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}buildQS();if(S.guia&&view==="guia")view="hoy"}
+  else if((S.ts||0)>(row?row.ts||0:0))await cloudPush();
+  syncState="ok"}catch(e){syncState="error"}
+ if(!(T&&!T.done)&&!(P&&!P.done))render();else paintSync()}
+async function cloudPush(){if(!SB||!SBU)return;if(sbPushing){sbPend=true;return}sbPushing=true;
+ try{const{error}=await SB.from("progreso").upsert({user_id:SBU.id,ts:S.ts||Date.now(),estado:S,resumen:resumen(),updated_at:new Date().toISOString()});syncState=error?"error":"ok"}catch(e){syncState="error"}
+ sbPushing=false;paintSync();if(sbPend){sbPend=false;cloudPush()}}
+function cloudSchedule(){if(!SBU)return;clearTimeout(sbTimer);sbTimer=setTimeout(cloudPush,3000)}
+async function cloudPeticion(nota){if(!SB||!SBU){toast("Entra en tu cuenta para pedirme la revisión");go("cuenta");return}
+ const data={estado:"pendiente",pedida:new Date().toISOString(),nota:String(nota||"").slice(0,500)};
+ const{error}=await SB.from("profe_docs").upsert({user_id:SBU.id,doc:"peticion",data,updated_at:new Date().toISOString()});
+ if(error){toast("No se ha podido enviar. Inténtalo otra vez");return}PET=data;addXP(5);toast("Petición enviada. La reviso en la siguiente pasada");render()}
+function vCuenta(){if(!STANDALONE)return `<section class="panel stack"><h2>Tu cuenta</h2><p>En esta versión tu cuenta es la de Claude: tu progreso ya está guardado y solo lo ves tú.</p></section>`;
+ if(!SB)return `<section class="panel stack"><h2>Tu cuenta</h2><p class="muted">No se ha podido conectar con el servidor. Comprueba tu conexión a internet y vuelve a abrir la app.</p></section>`;
+ if(SBU)return `<section class="panel stack"><div class="eyebrow">Tu cuenta</div><h2>Conectado con tu profe</h2><p>Has entrado como <b>${esc(SBU.email||"")}</b>. Tu progreso se guarda en tu cuenta y solo puedes verlo y cambiarlo tú. Yo lo reviso dos veces al día para dejarte informes y copiarlo a la versión de Claude.</p>
+  <div class="row"><span class="pill ${syncState==="ok"?"ok":"warn"}">${syncState==="ok"?"Sincronizado":"Pendiente de sincronizar"}</span><button class="btn" data-act="cloudsync">Sincronizar ahora</button><button class="btn" data-act="cloudout">Cerrar sesión</button></div>
+  <p class="small muted">Si cierras sesión, el progreso sigue en este móvil, pero deja de guardarse en tu cuenta hasta que vuelvas a entrar.</p></section>`;
+ return `<section class="panel stack"><div class="eyebrow">Tu cuenta</div><h2>Conéctate con tu profe</h2><p>Crea tu cuenta (es gratis) para que tu progreso se guarde en la nube, puedas recuperarlo si cambias de móvil y yo pueda revisarlo y dejarte informes aquí. Solo tú puedes ver y cambiar tu progreso.</p>
+  <label class="f">Email<input type="email" id="cuEmail" autocomplete="email" inputmode="email"></label>
+  <label class="f">Contraseña (mínimo 8 caracteres)<input type="password" id="cuPass" autocomplete="current-password"></label>
+  <div class="row"><button class="btn pri" data-act="cloudin">Entrar</button><button class="btn" data-act="cloudup">Crear cuenta</button><button class="btn ghost" data-act="cloudreset">He olvidado la contraseña</button></div>
+  <p class="small" id="cuMsg">${esc(sbMsg)}</p>
+  <p class="small muted">Al crear la cuenta te llegará un email para confirmarla. Pulsa el enlace del email; si se abre una página que no carga, no pasa nada: tu cuenta ya estará confirmada. Vuelve a la app y pulsa «Entrar».</p></section>`}
+after.cuenta=()=>{const p=$("#cuPass");if(p)p.onkeydown=e=>{if(e.key==="Enter")cloudAuth("in")}};
+async function cloudAuth(mode){const em=(($("#cuEmail")||{}).value||"").trim(),pw=($("#cuPass")||{}).value||"";const msg=t=>{sbMsg=t;const m=$("#cuMsg");if(m)m.textContent=t};
+ if(!SB)return;if(mode!=="reset"&&(!/^\S+@\S+\.\S+$/.test(em)||pw.length<8)){msg("Escribe un email válido y una contraseña de al menos 8 caracteres.");return}
+ try{if(mode==="up"){const{data,error}=await SB.auth.signUp({email:em,password:pw,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;msg(data.session?"Cuenta creada. ¡Ya estás conectado!":"Cuenta creada. Revisa tu email (también en spam) y pulsa el enlace para confirmarla. Después vuelve y pulsa «Entrar».")}
+  else if(mode==="in"){const{error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error)throw error;sbMsg="";toast("Has entrado en tu cuenta");go("hoy")}
+  else{if(!/^\S+@\S+\.\S+$/.test(em)){msg("Escribe primero tu email.");return}const{error}=await SB.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});if(error)throw error;msg("Te he enviado un email para cambiar la contraseña.")}}
+ catch(e){const t=String(e&&e.message||"");msg(/Invalid login/i.test(t)?"Email o contraseña incorrectos.":/not confirmed/i.test(t)?"Tienes que confirmar tu email antes de entrar: busca el correo de confirmación.":/already registered/i.test(t)?"Ese email ya tiene cuenta: pulsa «Entrar».":/rate limit/i.test(t)?"Demasiados intentos seguidos. Espera unos minutos.":"No se ha podido completar: "+t)}}
 
 /* ================= ACCIONES ================= */
 document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[data-act^="pin"]')&&!t.closest("summary"))return;const g=t.closest("[data-go]");if(g){go(g.dataset.go);return}
@@ -1958,6 +2013,11 @@ document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[d
   case "expres":startTest(shuffle(poolFor([])).slice(0,7),{mode:"estudio",label:"Sesión exprés"});break;
   case "onbgo":S.onb=true;save();startTest(shuffle(poolFor([])).slice(0,7),{mode:"estudio",label:"Sesión exprés"});break;
   case "onbskip":S.onb=true;save();render();break;
+  case "cloudin":cloudAuth("in");break;
+  case "cloudup":cloudAuth("up");break;
+  case "cloudreset":cloudAuth("reset");break;
+  case "cloudout":if(SB)SB.auth.signOut().then(()=>{SBU=null;syncState="local";toast("Sesión cerrada");render()});break;
+  case "cloudsync":cloudPull().then(()=>toast("Sincronizado"));break;
   case "pinenter":pinEnter();break;
   case "pinset":pinSet();break;
   case "pinoff":pinOff();break;
@@ -2003,7 +2063,7 @@ document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[d
 /* ================= ARRANQUE ================= */
 pinInit();applyFreezes();dayState();
 snapBase();if(!S.guia&&!(S.convDates&&Object.keys(S.convDates).length))selectConv(S.conv||"unif2027",true);const h0=location.hash.slice(1);go(!S.guia?"guia":VIEWS.includes(h0)?h0:"hoy");
-initClaude();
+initClaude();cloudInit();
 
 </script>
 
@@ -2011,14 +2071,7 @@ initClaude();
 /* ===== Modo app web (fuera de Claude) ===== */
 (function(){
  if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
- function aplicar(d){if(!d||typeof d!=='object')return;try{
-  if(d.novedades&&Array.isArray(d.novedades.items))NOV=d.novedades;
-  if(Array.isArray(d.convocatorias))CONV_DB=d.convocatorias;
-  if(d.temario)applyTemario(d.temario);
-  if(Array.isArray(d.preguntas)){PROFE_Q=d.preguntas;buildQS()}
-  if(Array.isArray(d.profe))PROFE={items:d.profe};
-  render()}catch(e){}}
- if(!(window.claude&&window.claude.use)){fetch('datos.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(aplicar).catch(()=>{})}
+ if(!(window.claude&&window.claude.use)&&!navigator.onLine){fetch('datos.json').then(r=>r.ok?r.json():null).then(d=>{aplicarDatos(d);render()}).catch(()=>{})}
 })();
 </script>
 </body></html>
