@@ -287,6 +287,13 @@ details.fase .nots{border-radius:8px}
 .gsec{display:grid;gap:2px;padding:10px 12px;border-left:4px solid var(--accent);background:var(--surface2);border-radius:0 8px 8px 0}
 .gsec b{font-family:var(--f-display);font-size:1.2rem}
 .gsteps{display:grid;gap:10px}
+
+body.locked #tabs,body.locked #sync,body.locked #hdrLvl,body.locked .hbtn{display:none}
+.lock{max-width:420px;width:100%;margin:6vh auto 0;display:grid;gap:12px;justify-items:center;text-align:center;position:relative;overflow:hidden;padding-top:28px}
+.lock>.chk{position:absolute;inset:0 0 auto}
+.lock .badge{width:56px;height:62px;font-size:20px}
+.lock input{font-size:1.6rem;letter-spacing:.4em;text-align:center;width:min(100%,220px)}
+.lock details{width:100%;text-align:left}
 </style>
 
 <header class="top">
@@ -1255,6 +1262,7 @@ function go(v){if(v==="inicio")v="hoy";if(!VIEWS.includes(v))v="hoy";view=v;try{
 $("#tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(b){if(b.dataset.v==="temario")openTema=null;go(b.dataset.v)}});
 window.addEventListener("hashchange",()=>{let v=location.hash.slice(1);if(v==="inicio")v="hoy";if(v!==view&&VIEWS.includes(v)){view=v;render()}});
 function render(){
+ if(LOCKED){document.body.classList.add("locked");$("#app").innerHTML=vLock();after.lock();return}document.body.classList.remove("locked");
  const top=PARENT[view]||view;
  $$("#tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===top?"page":"false"));
  const l=level();$("#hdrLvl").textContent="Nv "+l+" · "+streak()+"🔥";
@@ -1534,7 +1542,7 @@ function vMas(){const C=(go,t,d)=>`<button class="hub" data-go="${go}"><b>${t}</
   <div class="row"><label class="f">Ritmo diario<select id="goalSel">${Object.entries(GOALS).map(([k,g])=>`<option value="${k}" ${S.goal===k?"selected":""}>${g.n} · ${g.d}</option>`).join("")}</select></label>
   <label class="f">Fecha prevista del examen<input type="date" id="examDate" value="${esc(S.exam)}"></label>
   <label class="f">Marcas físicas<select id="sexoSel"><option value="h" ${S.sexo==="h"?"selected":""}>Hombres</option><option value="m" ${S.sexo==="m"?"selected":""}>Mujeres</option></select></label></div>
-  ${S.exampleDate?`<p class="small muted">*La fecha del examen es de ejemplo hasta que salga la convocatoria.</p>`:""}</section>`}
+  ${S.exampleDate?`<p class="small muted">*La fecha del examen es de ejemplo hasta que salga la convocatoria.</p>`:""}</section>${pinPanel()}`}
 after.mas=()=>{$("#goalSel").onchange=e=>{S.goal=e.target.value;save();render()};$("#examDate").onchange=e=>{setExam(e.target.value);render()};$("#sexoSel").onchange=e=>{S.sexo=e.target.value;save();render()}};
 
 /* ---- concentración ---- */
@@ -1885,8 +1893,36 @@ function vMovil(){if(STANDALONE)return `<section class="panel stack"><div class=
  <p class="note small">Si la app de Claude te pide permiso para que la página use a Claude (para el profe), dale a permitir. Si alguna vez ves «Solo en este dispositivo» arriba, cierra y vuelve a abrir la app para que se conecte.</p>
  <div class="row"><button class="btn" data-act="copylink">Copiar el enlace de la app</button><span class="small muted" id="linkMsg"></span></div></section>`}
 
+
+/* ================= PIN DE ACCESO ================= */
+const PINKEY="pla-pin";let LOCKED=false,pinFails=0,pinWait=0,hiddenAt=0;
+function pinGet(){try{return JSON.parse(localStorage.getItem(PINKEY)||"null")}catch(e){return null}}
+async function pinHash(pin,salt){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+":"+pin));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function pinUnlocked(){try{return sessionStorage.getItem("pla-unl")==="1"}catch(e){return false}}
+function pinInit(){LOCKED=!!pinGet()&&!pinUnlocked()}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)hiddenAt=Date.now();else if(pinGet()&&hiddenAt&&Date.now()-hiddenAt>180000){try{sessionStorage.removeItem("pla-unl")}catch(e){}LOCKED=true;render()}});
+function vLock(){const wait=Math.max(0,Math.ceil((pinWait-Date.now())/1000));return `<section class="lock panel"><div class="chk" aria-hidden="true"></div><div class="badge" aria-hidden="true">PL</div><h2>App protegida</h2><p class="muted">Escribe tu PIN para entrar.</p>
+ <input type="password" id="pinIn" inputmode="numeric" autocomplete="current-password" maxlength="8" placeholder="PIN" aria-label="PIN" ${wait?"disabled":""}>
+ <button class="btn pri big" data-act="pinenter" ${wait?"disabled":""}>Entrar</button><p class="small" id="pinMsg">${wait?`Demasiados intentos. Espera ${wait} s.`:pinFails?"PIN incorrecto.":""}</p>
+ <details class="case"><summary><span class="small">¿Has olvidado el PIN?</span></summary><div class="in"><p class="small">Sin el PIN no se puede entrar. La única forma de seguir es <b>borrar la app de este dispositivo</b>, con todo su progreso, y empezar de cero (o importar una copia que tengas guardada).</p><div id="wipeBox"><button class="btn sm" style="border-color:var(--ko);color:var(--ko)" data-act="pinwipe">Borrar todo en este dispositivo</button></div></div></details></section>`}
+after.lock=()=>{const i=$("#pinIn");if(i){i.focus();i.onkeydown=e=>{if(e.key==="Enter")pinEnter()}}};
+async function pinEnter(){const p=pinGet(),i=$("#pinIn");if(!p||!i)return;if(Date.now()<pinWait)return;const h=await pinHash(i.value,p.salt);
+ if(h===p.hash){LOCKED=false;pinFails=0;try{sessionStorage.setItem("pla-unl","1")}catch(e){}document.body.classList.remove("locked");render()}
+ else{pinFails++;if(pinFails>=5){pinWait=Date.now()+30000*Math.pow(2,Math.min(pinFails-5,4));setTimeout(render,1000)}render()}}
+async function pinSet(){const a=($("#pin1")||{}).value||"",b=($("#pin2")||{}).value||"",cur=pinGet();
+ if(cur){const old=($("#pin0")||{}).value||"";if(await pinHash(old,cur.salt)!==cur.hash){toast("El PIN actual no es correcto");return}}
+ if(!/^\d{4,8}$/.test(a)){toast("El PIN debe tener entre 4 y 8 números");return}if(a!==b){toast("Los dos PIN no coinciden");return}
+ const salt=Array.from(crypto.getRandomValues(new Uint8Array(12))).map(x=>x.toString(16).padStart(2,"0")).join("");
+ try{localStorage.setItem(PINKEY,JSON.stringify({salt,hash:await pinHash(a,salt)}));sessionStorage.setItem("pla-unl","1")}catch(e){toast("No se ha podido guardar el PIN en este navegador");return}
+ toast("PIN guardado. La app lo pedirá al abrirla");render()}
+async function pinOff(){const cur=pinGet();if(!cur)return;const old=($("#pin0")||{}).value||"";if(await pinHash(old,cur.salt)!==cur.hash){toast("El PIN actual no es correcto");return}try{localStorage.removeItem(PINKEY)}catch(e){}toast("PIN quitado");render()}
+function pinPanel(){const has=!!pinGet();return `<section class="panel stack"><div class="eyebrow">Seguridad</div><h3>${has?"Tu app está protegida con PIN":"Protege la app con un PIN"}</h3>
+ <p class="small muted">${has?"Se pide al abrir la app y si la dejas en segundo plano más de 3 minutos.":"Así, aunque alguien coja tu móvil, no podrá entrar ni cambiar tu progreso."} El PIN se guarda cifrado solo en este dispositivo.${STANDALONE?"":" En cada dispositivo donde abras la app puedes poner el suyo."}</p>
+ <div class="row">${has?`<label class="f">PIN actual<input type="password" id="pin0" inputmode="numeric" maxlength="8" autocomplete="current-password"></label>`:""}<label class="f">${has?"Nuevo PIN":"PIN (4-8 números)"}<input type="password" id="pin1" inputmode="numeric" maxlength="8" autocomplete="new-password"></label><label class="f">Repítelo<input type="password" id="pin2" inputmode="numeric" maxlength="8" autocomplete="new-password"></label></div>
+ <div class="row"><button class="btn pri" data-act="pinset">${has?"Cambiar PIN":"Activar PIN"}</button>${has?`<button class="btn" data-act="pinoff">Quitar PIN</button><button class="btn" data-act="pinlock">Bloquear ahora</button>`:""}</div></section>`}
+
 /* ================= ACCIONES ================= */
-document.addEventListener("click",e=>{const t=e.target;const g=t.closest("[data-go]");if(g){go(g.dataset.go);return}
+document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[data-act^="pin"]')&&!t.closest("summary"))return;const g=t.closest("[data-go]");if(g){go(g.dataset.go);return}
  const o=t.closest("[data-opt]");if(o&&T&&!T.done){const v=+o.dataset.opt;if(T.mode==="estudio"){if(T.ans[T.i]==null){T.ans[T.i]=v;T.counted[T.i]=1;recordAnswer(T.items[T.i].q,v===T.items[T.i].q.a)}}else T.ans[T.i]=v;render();return}
  const pd=t.closest("[data-pdd]");if(pd&&S.pdd!==today()){const v=+pd.dataset.pdd,q=pdd();S.pdd=today();S.pddAns=v;recordAnswer(q,v===q.a);if(v===q.a)addXP(10);bump("pdd");render();return}
  const j=t.closest("[data-jump]");if(j&&T){T.i=+j.dataset.jump;render();return}
@@ -1922,6 +1958,12 @@ document.addEventListener("click",e=>{const t=e.target;const g=t.closest("[data-
   case "expres":startTest(shuffle(poolFor([])).slice(0,7),{mode:"estudio",label:"Sesión exprés"});break;
   case "onbgo":S.onb=true;save();startTest(shuffle(poolFor([])).slice(0,7),{mode:"estudio",label:"Sesión exprés"});break;
   case "onbskip":S.onb=true;save();render();break;
+  case "pinenter":pinEnter();break;
+  case "pinset":pinSet();break;
+  case "pinoff":pinOff();break;
+  case "pinlock":try{sessionStorage.removeItem("pla-unl")}catch(e){}LOCKED=true;render();break;
+  case "pinwipe":{const w=$("#wipeBox");if(w)w.innerHTML=`<p class="small"><b>¿Seguro?</b> Se borrará todo el progreso de este dispositivo y no se puede deshacer.</p><button class="btn sm" style="border-color:var(--ko);color:var(--ko)" data-act="pinwipe2">Sí, borrar todo</button>`;break}
+  case "pinwipe2":try{localStorage.removeItem(PINKEY);localStorage.removeItem(KEY);sessionStorage.removeItem("pla-unl")}catch(e){}location.reload();break;
   case "copylink":{const u="https://claude.ai/artifact/PKwdDy4Apdy37U8ciePFm9";const m=$("#linkMsg");try{navigator.clipboard.writeText(u).then(()=>{if(m)m.textContent="Enlace copiado"},()=>{if(m)m.textContent=u})}catch(e){if(m)m.textContent=u}break}
   case "gnext":gStep++;render();window.scrollTo(0,0);break;
   case "gprev":gStep=Math.max(0,gStep-1);render();window.scrollTo(0,0);break;
@@ -1959,7 +2001,7 @@ document.addEventListener("click",e=>{const t=e.target;const g=t.closest("[data-
  }});
 
 /* ================= ARRANQUE ================= */
-applyFreezes();dayState();
+pinInit();applyFreezes();dayState();
 snapBase();if(!S.guia&&!(S.convDates&&Object.keys(S.convDates).length))selectConv(S.conv||"unif2027",true);const h0=location.hash.slice(1);go(!S.guia?"guia":VIEWS.includes(h0)?h0:"hoy");
 initClaude();
 
