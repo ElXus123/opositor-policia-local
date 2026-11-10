@@ -295,6 +295,13 @@ body.locked #tabs,body.locked #sync,body.locked #hdrLvl,body.locked .hbtn{displa
 .lock .badge{width:56px;height:62px;font-size:20px}
 .lock input{font-size:1.6rem;letter-spacing:.4em;text-align:center;width:min(100%,220px)}
 .lock details{width:100%;text-align:left}
+
+.leytext{display:grid;gap:4px;max-width:78ch}
+.leytext p{margin:0 0 8px;line-height:1.6}
+.leyart{padding:12px 0;border-top:1px solid var(--line)}
+.leyh{font-size:1.05rem;letter-spacing:.02em;margin:18px 0 4px;color:var(--accent)}
+.leyindex{display:grid;gap:6px;max-height:340px;overflow-y:auto;padding:10px;background:var(--surface2);border-radius:8px}
+mark{background:var(--gold);color:var(--gold-ink);border-radius:3px;padding:0 2px}
 </style>
 
 <header class="top">
@@ -430,12 +437,12 @@ r:["La LO 1/2004, de 28 de diciembre, de Medidas de Protección Integral contra 
 "En Aragón, la Ley 4/2007, de 22 de marzo, de Prevención y Protección Integral a las Mujeres Víctimas de Violencia en Aragón.",
 "Actuación policial: atender a la víctima de forma prioritaria, protegerla y separarla del agresor, procurar asistencia sanitaria, informar de sus derechos, detener al presunto agresor si procede, recoger pruebas y testigos y comunicar al juzgado de guardia."],
 c:[["Ley integral de violencia de género","LO 1/2004, de 28 de diciembre."],["Teléfono de atención a víctimas de violencia de género","016 (no deja rastro en la factura)."],["Precepto que regula la orden de protección","Art. 544 ter LECrim."],["Ley de igualdad efectiva de mujeres y hombres","LO 3/2007, de 22 de marzo."],["Ley aragonesa de violencia sobre la mujer","Ley 4/2007, de 22 de marzo."],["Sistema de seguimiento integral de casos de violencia de género","VioGén (Ministerio del Interior)."]]},
-{id:17,b:"Policial",t:"Protección civil, emergencias y espectáculos públicos en Aragón",n:"Ley 17/2015 · Ley 30/2002 Aragón · Ley 11/2005 Aragón",
-r:["La Ley 17/2015, de 9 de julio, regula el Sistema Nacional de Protección Civil. En Aragón rige la Ley 30/2002, de 17 de diciembre, de Protección Civil y Atención de Emergencias de Aragón. El teléfono único de emergencias es el 112 (SOS Aragón).",
+{id:17,b:"Policial",t:"Protección civil, emergencias y espectáculos públicos en Aragón",n:"Ley 17/2015 · Ley 4/2024 Aragón · Ley 11/2005 Aragón",
+r:["La Ley 17/2015, de 9 de julio, regula el Sistema Nacional de Protección Civil. En Aragón rige la Ley 4/2024, de 28 de junio, del Sistema de Protección Civil y Gestión de Emergencias de Aragón, que sustituyó a la antigua Ley 30/2002. El teléfono único de emergencias es el 112 (SOS Aragón).",
 "Instrumentos: plan territorial de la comunidad (PLATEAR), planes especiales (inundaciones, incendios forestales, riesgo químico, etc.), planes municipales y planes de autoprotección de centros y actividades.",
 "Las Policías Locales prestan auxilio en accidentes, catástrofes y calamidades y participan en la ejecución de los planes de protección civil (art. 53.1.f LO 2/1986). El Alcalde es la autoridad municipal de protección civil.",
 "Espectáculos públicos: la Ley 11/2005, de 28 de diciembre, de Espectáculos Públicos, Actividades Recreativas y Establecimientos Públicos de la Comunidad Autónoma de Aragón regula horarios, aforos, licencias, condiciones de seguridad e inspección, y el régimen sancionador. La Policía Local inspecciona establecimientos, controla horarios de cierre y aforos y denuncia las infracciones."],
-c:[["Ley estatal de protección civil","Ley 17/2015, de 9 de julio."],["Ley aragonesa de protección civil","Ley 30/2002, de 17 de diciembre."],["Teléfono único de emergencias","112."],["Ley de espectáculos públicos de Aragón","Ley 11/2005, de 28 de diciembre."],["Autoridad municipal de protección civil","El Alcalde."]]},
+c:[["Ley estatal de protección civil","Ley 17/2015, de 9 de julio."],["Ley aragonesa de protección civil vigente","Ley 4/2024, de 28 de junio, del Sistema de Protección Civil y Gestión de Emergencias de Aragón."],["Teléfono único de emergencias","112."],["Ley de espectáculos públicos de Aragón","Ley 11/2005, de 28 de diciembre."],["Autoridad municipal de protección civil","El Alcalde."]]},
 {id:18,b:"Policial",t:"Deontología policial, derechos humanos y policía de proximidad",n:"ONU 1979 · Consejo de Europa 1979 y 2001",
 r:["Textos internacionales: la Declaración Universal de Derechos Humanos (10 de diciembre de 1948); el Convenio Europeo de Derechos Humanos (Roma, 1950); el Código de Conducta de la ONU para funcionarios encargados de hacer cumplir la ley (Resolución 34/169, de 17 de diciembre de 1979); la Declaración sobre la Policía del Consejo de Europa (Resolución 690, de 1979); y el Código Europeo de Ética de la Policía (Recomendación Rec(2001)10).",
 "El uso de la fuerza debe ser excepcional, en la medida estrictamente necesaria y regido por los principios de congruencia, oportunidad y proporcionalidad (art. 5 LO 2/1986). Ningún agente puede infligir, instigar o tolerar actos de tortura o tratos crueles, inhumanos o degradantes, ni invocar la orden de un superior para justificarlos.",
@@ -596,7 +603,7 @@ const PREG = [
 [16,"La violencia de género, a efectos de la LO 1/2004, es la ejercida sobre las mujeres por:",["Cualquier hombre","Quienes sean o hayan sido sus cónyuges o estén o hayan estado ligados a ellas por relaciones similares de afectividad, aun sin convivencia","Solo quienes convivan con ellas","Cualquier familiar"],1,"Art. 1 LO 1/2004."],
 [16,"La ley aragonesa de prevención y protección integral a las mujeres víctimas de violencia es la:",["Ley 4/2007","Ley 8/2013","Ley 7/1999","Ley 11/2005"],0,"Ley 4/2007, de 22 de marzo."],
 [16,"La LOPIVI, de protección integral a la infancia y la adolescencia frente a la violencia, es la:",["LO 5/2000","LO 1/1996","LO 8/2021","LO 3/2018"],2,"LO 8/2021, de 4 de junio."],
-[17,"La ley de Protección Civil y Atención de Emergencias de Aragón es la:",["Ley 17/2015","Ley 30/2002","Ley 11/2005","Ley 2/1985"],1,"Ley 30/2002, de 17 de diciembre."],
+[17,"La ley vigente del Sistema de Protección Civil y Gestión de Emergencias de Aragón es la:",["Ley 17/2015","Ley 4/2024","Ley 11/2005","Ley 30/2002"],1,"Ley 4/2024, de 28 de junio, que sustituyó a la Ley 30/2002."],
 [17,"La ley de Espectáculos Públicos, Actividades Recreativas y Establecimientos Públicos de Aragón es la:",["Ley 11/2005","Ley 30/2002","Ley 8/2015","Ley 10/1993"],0,"Ley 11/2005, de 28 de diciembre."],
 [17,"La ley estatal del Sistema Nacional de Protección Civil es la:",["Ley 2/1985","Ley 17/2015","LO 4/1981","Ley 30/2002"],1,"Ley 17/2015, de 9 de julio, que derogó la Ley 2/1985."],
 [17,"El número único de emergencias en la Unión Europea, también en Aragón, es el:",["091","092","112","061"],2,"Atendido en Aragón por el Centro de Emergencias SOS Aragón."],
@@ -749,7 +756,7 @@ c:[["Primera ITV de un turismo particular","A los 4 años."],["Periodicidad de l
 {id:28,b:"Parte específica",t:"Reglamento de armas. Clasificación de las armas reglamentarias. Armas prohibidas. Guías, licencias, tarjetas y autorizaciones. Régimen sancionador",n:"RD 137/1993 (comprueba la versión vigente)",
 r:["El Reglamento de Armas aprobado por el RD 137/1993 clasifica las armas reglamentadas en siete categorías: 1ª armas de fuego cortas (pistolas y revólveres); 2ª armas de fuego largas para vigilancia y guardería y rifles; 3ª otras armas largas rayadas para caza y tiro deportivo, escopetas y armas de cañón liso; 4ª carabinas y pistolas de tiro semiautomático y repetición, y revólveres de doble acción, accionados por aire u otro gas comprimido no asimiladas a escopetas; 5ª armas blancas (de hoja cortante o punzante); 6ª armas antiguas, históricas y de colección; 7ª otras armas (ballestas, armas de inyección anestésica, de alarma y señales, lanzacabos, etc.).","Armas prohibidas: entre otras, las armas de fuego camufladas o que simulen otros objetos, las armas automáticas para particulares, los bastones-estoque, los puñales de hoja menor de 11 cm de doble filo, las navajas automáticas, los puños americanos, las defensas eléctricas, los sprays de defensa personal no autorizados y las defensas de alambre o plomo.","Documentación: la guía de pertenencia acompaña a cada arma de fuego y debe llevarse con ella. Licencias: A (armas de fuego cortas y largas rayadas de funcionarios de las FCS y otros cuerpos), B (armas de fuego cortas de particulares, por necesidad), C (personal de seguridad privada), D (armas largas rayadas para caza mayor), E (escopetas y armas para caza menor y tiro), F (tiro deportivo). Tarjeta europea de armas de fuego para viajar a la UE. Autorizaciones especiales para coleccionistas y menores en actividades deportivas.","Infracciones y sanciones: la LO 4/2015 tipifica como muy graves, graves o leves diversas conductas con armas (fabricación o tenencia de armas prohibidas, portarlas sin documentación, exhibirlas de forma negligente o temeraria). La Policía Local interviene el arma, levanta acta de intervención y la deposita según el procedimiento establecido. Ha habido proyectos de nuevo Reglamento de Armas: comprueba qué texto estaba vigente en la fecha de tu convocatoria."],
 c:[["Categoría de las armas de fuego cortas","1ª categoría."],["Categoría de las armas blancas","5ª categoría."],["Documento que acompaña a cada arma de fuego","La guía de pertenencia."],["Licencia de armas de los funcionarios de las FCS","Licencia A."],["Licencia para escopetas y caza menor","Licencia E."],["Licencia de vigilantes de seguridad privada","Licencia C."]]},
-{id:29,b:"Complementario",x:1,t:"Protección civil y emergencias en Aragón (no figura en el temario unificado 2026)",n:"Ley 17/2015 · Ley 30/2002 Aragón",r:O(17).r.filter((x,i)=>i<3),c:O(17).c.filter((x,i)=>i!==3)},
+{id:29,b:"Complementario",x:1,t:"Protección civil y emergencias en Aragón (no figura en el temario unificado 2026)",n:"Ley 17/2015 · Ley 4/2024 Aragón",r:O(17).r.filter((x,i)=>i<3),c:O(17).c.filter((x,i)=>i!==3)},
 {id:30,b:"Complementario",x:1,t:"Extranjería, protección de datos y transparencia (útil para convocatorias municipales)",n:"LO 4/2000 · LO 3/2018 · Ley 8/2015 Aragón",r:O(19).r,c:O(19).c},
 {id:31,b:"Complementario",x:1,t:"Geografía de Aragón y conocimiento del municipio (convocatorias propias de cada ayuntamiento)",n:"Temas locales",r:O(20).r,c:O(20).c}
 ];
@@ -1255,22 +1262,22 @@ function readiness(){const cov=OFICIALES.reduce((a,t)=>a+(S.temas[t.id]||0),0)/(
  return{v:Math.round(parts.reduce((a,p)=>a+p[1]*p[2],0)*100),parts}}
 
 /* ================= NAVEGACIÓN ================= */
-const VIEWS=["guia","cuenta","movil","entreno","hoy","ruta","temario","practicar","profe","mas","tests","tarjetas","psico","supuestos","fisicas","convocatoria","plan","logros"];
-const PARENT={cuenta:"mas",entreno:"practicar",movil:"mas",tests:"practicar",tarjetas:"practicar",psico:"practicar",supuestos:"practicar",fisicas:"practicar",convocatoria:"mas",plan:"mas",logros:"mas"};
-const PNAME={practicar:"Practicar",mas:"Más"};
+const VIEWS=["guia","leyes","ley","cuenta","movil","entreno","hoy","ruta","temario","practicar","profe","mas","tests","tarjetas","psico","supuestos","fisicas","convocatoria","plan","logros"];
+const PARENT={leyes:"temario",ley:"leyes",cuenta:"mas",entreno:"practicar",movil:"mas",tests:"practicar",tarjetas:"practicar",psico:"practicar",supuestos:"practicar",fisicas:"practicar",convocatoria:"mas",plan:"mas",logros:"mas"};
+const PNAME={practicar:"Practicar",mas:"Más",temario:"Temario",leyes:"Leyes completas"};
 let view="hoy",openTema=null;
 function go(v){if(v==="inicio")v="hoy";if(!VIEWS.includes(v))v="hoy";view=v;try{if(location.hash!=="#"+v)history.replaceState(null,"","#"+v)}catch(e){}render();window.scrollTo(0,0)}
 $("#tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(b){if(b.dataset.v==="temario")openTema=null;go(b.dataset.v)}});
 window.addEventListener("hashchange",()=>{let v=location.hash.slice(1);if(v==="inicio")v="hoy";if(v!==view&&VIEWS.includes(v)){view=v;render()}});
 function render(){
  if(LOCKED){document.body.classList.add("locked");$("#app").innerHTML=vLock();after.lock();return}document.body.classList.remove("locked");
- const top=PARENT[view]||view;
+ const top=PARENT[view]&&PARENT[PARENT[view]]?PARENT[PARENT[view]]:(PARENT[view]||view);
  $$("#tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===top?"page":"false"));
  const l=level();$("#hdrLvl").textContent="Nv "+l+" · "+streak()+"🔥";
  const nNew=(NOV.items||[]).filter(i=>i.fecha>(S.seenNov||"")).length+(PROFE.items||[]).filter(i=>(i.fecha||"")>(S.seenProfe||"")).length+(RES.items||[]).filter(i=>(i.fecha||"")>(S.seenRes||"")).length;
  const pb=$("#tabs button[data-v='profe'] .dot");if(pb)pb.hidden=!nNew;
  if(view==="profe")bump("profe");
- const f={guia:vGuia,cuenta:vCuenta,movil:vMovil,entreno:vEntreno,hoy:vHoy,ruta:vRuta,temario:vTemario,practicar:vPracticar,profe:vProfe,mas:vMas,tests:vTests,tarjetas:vRepaso,psico:vPsico,supuestos:vCasos,fisicas:vFis,convocatoria:vConv,plan:vPlan,logros:vLogros}[view];
+ const f={guia:vGuia,leyes:vLeyes,ley:vLey,cuenta:vCuenta,movil:vMovil,entreno:vEntreno,hoy:vHoy,ruta:vRuta,temario:vTemario,practicar:vPracticar,profe:vProfe,mas:vMas,tests:vTests,tarjetas:vRepaso,psico:vPsico,supuestos:vCasos,fisicas:vFis,convocatoria:vConv,plan:vPlan,logros:vLogros}[view];
  const back=PARENT[view]&&!(view==="tests"&&T)&&!(view==="psico"&&P)?`<div><button class="btn sm ghost" data-go="${PARENT[view]}">← ${PNAME[PARENT[view]]}</button></div>`:"";
  $("#app").innerHTML=back+f();paintSync();
  if(after[view])after[view]();
@@ -1645,11 +1652,13 @@ function vTemario(){if(openTema)return vTemaDetail(TEMA(openTema));
  return `<section class="panel stack"><div class="eyebrow">Anexo II · Orden HAP/678/2026</div><h2>Todo lo que puede caer</h2>
   <p class="muted">Estos 28 temas son el programa completo de la convocatoria: puede caer cualquier contenido de estas normas, aunque nunca haya salido antes. Al final tienes la <b>ampliación</b> (temas 29-36), con lo que suelen añadir las convocatorias municipales y lo que te ayuda en los supuestos.</p>
   ${cambiosTemario().length?`<div class="note small"><b>Cambios recientes en el temario:</b><ul class="clean">${cambiosTemario().slice(0,5).map(c=>`<li>${esc(c.fecha||"")}: ${esc(c.texto||"")}</li>`).join("")}</ul></div>`:""}${(convSel().extra||[]).length?`<p class="small">Tu convocatoria (${esc(convSel().n)}) añade: ${convSel().extra.map(id=>TEMA(id)?"T"+id:"").filter(Boolean).join(", ")}.</p>`:""}
+  <div class="row"><button class="btn pri" data-go="leyes">📖 Leyes completas (texto oficial del BOE)</button></div>
   <div class="row"><span class="pill ok num">${dom}/28 dominados</span><div class="bar g" style="flex:1;min-width:140px"><i style="width:${dom/28*100}%"></i></div></div></section>
  ${blocks.map(b=>`<section class="stack"><h3>${esc(b)}</h3>${TEMAS.filter(t=>t.b===b).map(t=>{const s=S.temas[t.id]||0;const a=temaAcc(t.id);return `<button class="tema" data-act="opentema" data-id="${t.id}"><span class="tn">${t.x?"C":t.id}</span><span><span class="tt">${esc(t.t)}</span><br><span class="small muted mono">${esc(t.n)}</span></span><span class="meta">${t.upd?`<span class="pill gold">Actualizado</span>`:""}<span class="pill ${STCLS[s]}">${STATUS[s]}</span>${a?`<span class="small muted num">${pct(a.p)} aciertos</span>`:""}</span></button>`}).join("")}</section>`).join("")}`}
 function vTemaDetail(t){const s=S.temas[t.id]||0;const nq=QS.filter(q=>q.t===t.id).length;const a=temaAcc(t.id);
  return `<section class="row"><button class="btn sm" data-act="closetema">← Todos los temas</button>${t.id>1?`<button class="btn sm" data-act="opentema" data-id="${t.id-1}">← Tema ${t.id-1}</button>`:""}${t.id<TEMAS.length?`<button class="btn sm" data-act="opentema" data-id="${t.id+1}">Tema ${t.id+1} →</button>`:""}</section>
  <section class="panel stack"><div class="eyebrow">${t.x?"Complementario":"Tema "+t.id} · ${esc(t.b)}</div><h1 style="font-size:1.8rem">${esc(t.t)}</h1><div class="chips">${t.n.split(/ · /).map(n=>`<a class="chip" href="https://www.google.com/search?q=${encodeURIComponent(n+" texto consolidado")}" target="_blank" rel="noopener">${esc(n)} ↗</a>`).join("")}</div>
+  ${leyChips(t)}
   <div class="row"><span class="small muted">Estado:</span><div class="seg">${STATUS.map((x,i)=>`<button data-act="status" data-id="${t.id}" data-s="${i}" aria-pressed="${i===s}">${x}</button>`).join("")}</div></div>
   <div class="row"><button class="btn" data-act="speak" data-id="${t.id}">${speaking?"Parar lectura":"Escuchar el resumen"}</button>${SAMPLE?`<button class="btn" data-act="explica" data-id="${t.id}">Explícamelo fácil</button><button class="btn" data-act="genq" data-id="${t.id}">Pedir 5 preguntas nuevas al profe</button>`:""}</div>
   <div id="iaOut"></div></section>
@@ -1976,6 +1985,42 @@ async function cloudAuth(mode){const em=(($("#cuEmail")||{}).value||"").trim(),p
   else{if(!/^\S+@\S+\.\S+$/.test(em)){msg("Escribe primero tu email.");return}const{error}=await SB.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});if(error)throw error;msg("Te he enviado un email para cambiar la contraseña.")}}
  catch(e){const t=String(e&&e.message||"");msg(/Invalid login/i.test(t)?"Email o contraseña incorrectos.":/not confirmed/i.test(t)?"Tienes que confirmar tu email antes de entrar: busca el correo de confirmación.":/already registered/i.test(t)?"Ese email ya tiene cuenta: pulsa «Entrar».":/rate limit/i.test(t)?"Demasiados intentos seguidos. Espera unos minutos.":"No se ha podido completar: "+t)}}
 
+
+/* ================= LEYES COMPLETAS (texto consolidado del BOE) ================= */
+let LEYIDX=null,LEYC={},openLey=null,leyQ="",leyN=150,leyIdxOpen=false,leyErr="",leyJump=null;
+const normz=t=>String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+async function leyIdx(){if(LEYIDX)return LEYIDX;try{const r=await fetch("leyes/indice.json",{cache:"no-cache"});if(!r.ok)throw 0;LEYIDX=await r.json()}catch(e){LEYIDX=[];leyErr="No se ha podido cargar la biblioteca de leyes. Comprueba tu conexión."}return LEYIDX}
+async function leyDoc(s){if(LEYC[s])return LEYC[s];const r=await fetch("leyes/"+s+".json");if(!r.ok)throw new Error("no");const d=await r.json();LEYC[s]=d;return d}
+function leyesDeTema(id){return(LEYIDX||[]).filter(l=>(l.temas||[]).includes(id))}
+function favArts(){if(!Array.isArray(S.favArts))S.favArts=[];return S.favArts}
+function vLeyes(){if(!LEYIDX){leyIdx().then(()=>{if(view==="leyes")render()});return `<section class="panel"><p class="muted">Cargando la biblioteca de leyes…</p></section>`}
+ const favs=favArts();const temaN=id=>TEMA(id)?(TEMA(id).x?"C":"T")+id:"";
+ return `<section class="panel stack"><div class="eyebrow">Biblioteca</div><h2>Leyes completas</h2>
+  <p class="muted">El texto íntegro y oficial de las normas del temario, tal como lo publica el BOE en su versión consolidada (con todas las reformas). Es lo que se estudia de verdad: los resúmenes de cada tema te dicen qué artículos mirar y aquí los lees enteros.</p>
+  ${leyErr?`<p class="note small">${esc(leyErr)}</p>`:""}
+  <p class="small muted">Los Decretos aragoneses 222/1991 (Reglamento marco de las Policías Locales) y 10/2023 (Academia Aragonesa de Policías Locales) no están en la base de datos del BOE: consúltalos en el <a href="https://www.boa.aragon.es" target="_blank" rel="noopener">Boletín Oficial de Aragón</a>.</p></section>
+ ${favs.length?`<section class="panel stack"><div class="eyebrow">Para repasar</div><h3>Tus artículos marcados (${favs.length})</h3><div class="chips">${favs.map(f=>{const[s,t]=f.split("|");const l=(LEYIDX||[]).find(x=>x.s===s);return `<button class="chip" data-leygo="${esc(s)}" data-art="${esc(t)}">${esc((l?l.c.split(",")[0]:s)+" · "+t)}</button>`}).join("")}</div></section>`:""}
+ <section class="stack">${LEYIDX.map(l=>`<button class="tema" data-ley="${esc(l.s)}"><span class="tn" style="font-size:1rem">${l.art}</span><span><span class="tt">${esc(l.c)}</span><br><span class="small muted">${l.art} artículos · actualizada en el BOE el ${esc(l.a)} · ${l.kb} KB</span></span><span class="meta"><span class="small muted">${(l.temas||[]).map(temaN).filter(Boolean).join(" ")}</span></span></button>`).join("")}</section>`}
+function hiQ(txt,q){const e=esc(txt);if(!q)return e;try{const re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");return e.replace(re,"<mark>$1</mark>")}catch(x){return e}}
+function vLey(){const meta=(LEYIDX||[]).find(l=>l.s===openLey);const d=LEYC[openLey];
+ if(!d){leyDoc(openLey).then(()=>{if(view==="ley")render()}).catch(()=>{leyErr="No se ha podido abrir esta ley. Comprueba tu conexión.";if(view==="ley")render()});return `<section class="panel"><p class="muted">${esc(leyErr||"Abriendo la ley…")}</p></section>`}
+ const q=leyQ.trim(),nq=normz(q);const idx=[];d.b.forEach((b,i)=>{if(!nq||normz(b.t).includes(nq)||(b.p&&normz(b.p.join(" ")).includes(nq)))idx.push(i)});
+ const shown=idx.slice(0,leyN);const favs=favArts();const heads=d.b.map((b,i)=>b.h?{i,t:b.t}:null).filter(Boolean);
+ return `<section class="panel stack leyhead"><div class="eyebrow">${meta?esc((meta.temas||[]).map(t=>"Tema "+t).join(" · ")):"Ley"}</div><h2>${esc(d.c)}</h2><p class="small muted">${esc(d.n)}</p>
+  <div class="row small"><span class="pill">Texto consolidado del BOE, actualizado el ${esc(d.a)}</span><a href="${esc(d.url)}" target="_blank" rel="noopener">Ver en el BOE</a></div>
+  <div class="row"><label class="f" style="flex:1;min-width:200px">Buscar en esta ley<input type="search" id="leyQ" value="${esc(leyQ)}" placeholder="Ej.: detención, 72 horas, alcohol"></label><label class="f">Ir al artículo<input type="text" id="leyArt" inputmode="numeric" placeholder="Nº" style="width:90px"></label><button class="btn" data-act="leyidx" style="align-self:end">${leyIdxOpen?"Ocultar índice":"Índice"}</button></div>
+  ${q?`<span class="small">${idx.length} resultados para «${esc(q)}»</span>`:""}
+  ${leyIdxOpen?`<div class="leyindex">${heads.map(h=>`<button class="linkish small" data-leyjump="${h.i}">${esc(h.t)}</button>`).join("")||"<span class='small muted'>Esta norma no tiene títulos ni capítulos.</span>"}</div>`:""}</section>
+ <section class="panel leytext">${shown.map(i=>{const b=d.b[i];if(b.h)return `<h3 class="leyh" id="lb${i}">${hiQ(b.t,q)}</h3>`;const key=openLey+"|"+b.t;const fav=favs.includes(key);
+  return `<article class="leyart" id="lb${i}"><div class="row" style="justify-content:space-between;gap:6px"><b>${hiQ(b.t,q)}</b><button class="btn sm ghost" data-favart="${esc(key)}" aria-pressed="${fav}" title="Marcar para repasar">${fav?"★ Marcado":"☆ Marcar"}</button></div>${b.p.map(p=>`<p>${hiQ(p,q)}</p>`).join("")}</article>`}).join("")||`<p class="muted">No hay resultados. Prueba con otra palabra.</p>`}
+  ${idx.length>shown.length?`<div class="row" style="justify-content:center"><button class="btn pri" data-act="leymore">Mostrar más (${idx.length-shown.length} restantes)</button></div>`:""}</section>`}
+after.ley=()=>{const q=$("#leyQ");let tm=null;if(q)q.oninput=e=>{clearTimeout(tm);tm=setTimeout(()=>{leyQ=e.target.value;leyN=150;const pos=e.target.selectionStart;render();const n=$("#leyQ");if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(x){}}},350)};
+ const a=$("#leyArt");if(a)a.onkeydown=e=>{if(e.key==="Enter")leyGoArt(a.value)};
+ if(leyJump!=null){const el=document.getElementById("lb"+leyJump);leyJump=null;if(el)el.scrollIntoView({block:"start"})}};
+function leyGoArt(v){const d=LEYC[openLey];if(!d)return;const n=String(v).trim();if(!n)return;const re=new RegExp("^(Artículo|Art\\.)\\s+"+n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(\\b|\\.|$)","i");
+ const i=d.b.findIndex(b=>!b.h&&re.test(b.t));if(i<0){toast("No encuentro el artículo "+n);return}leyQ="";leyN=Math.max(150,i+40);leyJump=i;render()}
+function leyChips(t){const ls=leyesDeTema(t.id);if(!ls.length)return "";return `<div class="stack" style="gap:6px"><span class="small muted"><b>Leyes completas de este tema</b> (texto oficial del BOE):</span><div class="row">${ls.map(l=>`<button class="btn sm" data-ley="${esc(l.s)}">📖 ${esc(l.c)}</button>`).join("")}</div></div>`}
+
 /* ================= ACCIONES ================= */
 document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[data-act^="pin"]')&&!t.closest("summary"))return;const g=t.closest("[data-go]");if(g){go(g.dataset.go);return}
  const o=t.closest("[data-opt]");if(o&&T&&!T.done){const v=+o.dataset.opt;if(T.mode==="estudio"){if(T.ans[T.i]==null){T.ans[T.i]=v;T.counted[T.i]=1;recordAnswer(T.items[T.i].q,v===T.items[T.i].q.a)}}else T.ans[T.i]=v;render();return}
@@ -1992,6 +2037,10 @@ document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[d
  const af=t.closest("[data-addfis]");if(af){const id=af.dataset.addfis,f=FIS_ACT().find(x=>x.id===id);const v=parseVal(f,$("#v_"+id).value);if(isNaN(v)){toast("Escribe una marca numérica");return}S.fis.push({p:id,v,d:today()});bump("fis");addXP(15);render();toast(fisOk(f)?"¡Marca de apto!":"Marca guardada");return}
  const sx=t.closest("[data-sexo]");if(sx){S.sexo=sx.dataset.sexo;save();render();return}
  const gl=t.closest("[data-goal]");if(gl){S.goal=gl.dataset.goal;save();render();return}
+ const ly=t.closest("[data-ley]");if(ly){openLey=ly.dataset.ley;leyQ="";leyN=150;leyIdxOpen=false;go("ley");return}
+ const lg=t.closest("[data-leygo]");if(lg){openLey=lg.dataset.leygo;leyQ="";const n=(lg.dataset.art||"").replace(/^\D+/,"");go("ley");leyDoc(openLey).then(()=>{if(n)leyGoArt(n)}).catch(()=>{});return}
+ const lj=t.closest("[data-leyjump]");if(lj){const i=+lj.dataset.leyjump;leyQ="";leyN=Math.max(150,i+60);leyJump=i;leyIdxOpen=false;render();return}
+ const fa=t.closest("[data-favart]");if(fa){const k=fa.dataset.favart,f=favArts(),i=f.indexOf(k);if(i>=0)f.splice(i,1);else{f.push(k);addXP(2)}save();fa.setAttribute("aria-pressed",String(i<0));fa.textContent=i<0?"★ Marcado":"☆ Marcar";return}
  const cv=t.closest("[data-conv]");if(cv){selectConv(cv.dataset.conv);render();return}
  const tk=t.closest("[data-task]");if(tk){e.preventDefault();runTask(tk.dataset.task,+tk.dataset.id||0);return}
  const fc=t.closest("[data-foco]");if(fc){FOCO={min:+fc.dataset.foco,end:Date.now()+fc.dataset.foco*60000};render();return}
@@ -2018,6 +2067,8 @@ document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[d
   case "cloudreset":cloudAuth("reset");break;
   case "cloudout":if(SB)SB.auth.signOut().then(()=>{SBU=null;syncState="local";toast("Sesión cerrada");render()});break;
   case "cloudsync":cloudPull().then(()=>toast("Sincronizado"));break;
+  case "leyidx":leyIdxOpen=!leyIdxOpen;render();break;
+  case "leymore":leyN+=200;render();break;
   case "pinenter":pinEnter();break;
   case "pinset":pinSet();break;
   case "pinoff":pinOff();break;
@@ -2063,7 +2114,7 @@ document.addEventListener("click",e=>{const t=e.target;if(LOCKED&&!t.closest('[d
 /* ================= ARRANQUE ================= */
 pinInit();applyFreezes();dayState();
 snapBase();if(!S.guia&&!(S.convDates&&Object.keys(S.convDates).length))selectConv(S.conv||"unif2027",true);const h0=location.hash.slice(1);go(!S.guia?"guia":VIEWS.includes(h0)?h0:"hoy");
-initClaude();cloudInit();
+initClaude();cloudInit();leyIdx().then(()=>{if(view==="temario")render()});
 
 </script>
 
